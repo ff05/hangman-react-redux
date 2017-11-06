@@ -1,9 +1,24 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
-import Counter from './Counter'
+import clearGuesses from '../actions/guesses/clear'
+import css from './Hangman.css'
 
 class Hangman extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.words = [
+      "moustache",
+      "recipe",
+      "coffee",
+      "thingy",
+      "cors"
+    ]
+
+    this.word = this.words[Math.floor(Math.random()*this.words.length)]
+
+  }
 
   wrongGuessCount(word, guesses) {
     var count = 0;
@@ -11,7 +26,17 @@ class Hangman extends PureComponent {
       if (word.indexOf(guesses[i]) === -1)
       count += 1;
     }
-    return (<p>{6 - count} turns left</p>)
+    this.isDead(count)
+    this.showHangman(count)
+    return count
+
+  }
+
+  isDead(guessCount) {
+    if (guessCount == this.props.hangman.guessCount){
+      alert("You lost")
+      this.reset()
+    }
   }
 
   showGuess(word, guesses) {
@@ -20,39 +45,141 @@ class Hangman extends PureComponent {
       if (guesses.includes(el)) return el;
       else return "_";
     });
+    this.youWon(word, guesses)
     return (<h2>{wordArr2.join(" ")}</h2>)
   }
 
-  handleSubmit(value) {
-    return alert(value)
-  }
-
-  onChange(event) {
-    console.log(this.props)
-    this.props.addGuess(event.target.value)
+  youWon(word, guesses) {
+    let count = word.split("").filter(guess => {
+      return guesses.includes(guess)
+    })
+    if (count.length === word.length){
+      alert("You won")
+      this.reset()
+    }
   }
 
   showGuesses(guesses) {
-    return (<p>Tries: {guesses.join(", ")}</p>)
+    return (<p>Guessed sofar: {guesses.join(", ")}</p>)
   }
 
-  next(word, guesses) {
-    this.wrongGuessCount(word, guesses)
-    this.showGuess(word, guesses)
+  reset() {
+    this.generateWord()
+    this.props.clearGuesses()
+  }
+
+  generateWord() {
+    this.word = this.words[Math.floor(Math.random()*this.words.length)]
+  }
+
+  onChange(event) {
+    const { guesses } = this.props.hangman
+    const { value } = event.target
+    if (!guesses.includes(value))
+      this.props.addGuess(value)
+  }
+
+  showHangman(wrongs) {
+    switch(wrongs) {
+      case 1:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |          ----<br />
+         |<br />
+         |<br />
+         |<br />
+    ___________
+        </pre>)
+      case 2:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |          ----<br />
+         |           ||<br />
+         |<br />
+         |<br />
+    ___________
+        </pre>)
+      case 3:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |          ----<br />
+         |         \_||<br />
+         |<br />
+         |<br />
+    ___________
+        </pre>)
+      case 4:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |          ----<br />
+         |         \_||_/<br />
+         |<br />
+         |<br />
+    ___________
+        </pre>)
+      case 5:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |          ----<br />
+         |         \_||_/<br />
+         |           |<br />
+         |          /<br />
+    ___________
+        </pre>)
+      case 6:
+      return (<pre>
+          ___________<br />
+         |  /        ||<br />
+         | /        ----<br />
+         |/        | ++ |<br />
+         |         | /\ |<br />
+         |          ----<br />
+         |         \_||_/<br />
+         |           ||<br />
+         |          /  \<br />
+         ___________
+        </pre>)
+      default:
+      return (<pre>
+                ___________<br />
+               |  /        ||<br />
+               | / <br />
+               |/ <br />
+               |<br />
+               |<br />
+               |<br />
+               |<br />
+              ___________
+        </pre>)
+    }
+
   }
 
   render() {
-    const {words, guesses} = this.props.hangman
-    const word = words[Math.floor(Math.random()*words.length)]
+    const {guesses} = this.props.hangman
 
-    const guessCount = this.wrongGuessCount(word, guesses)
-    const showGuess = this.showGuess(word, guesses)
+    const guessCount = this.wrongGuessCount(this.word, guesses)
+    const showGuess = this.showGuess(this.word, guesses)
     const showGuesses = this.showGuesses(guesses)
-    const next = this.next(word, guesses)
     return (
-      <div class="hangman">
+      <div className="hangman">
+        {this.showHangman(guessCount)}
         {showGuess}
-        {guessCount}
         <form>
           <label>
             Enter letter:
@@ -60,13 +187,12 @@ class Hangman extends PureComponent {
           </label>
         </form>
         {showGuesses}
-        <button onClick={() => addGuess("l")}>add letter</button>
       </div>
     )
   }
 }
 
 const mapStateToProps = ({ hangman }) => ({ hangman })
-const mapDispatchToProps = { addGuess }
+const mapDispatchToProps = { addGuess, clearGuesses }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Hangman)
