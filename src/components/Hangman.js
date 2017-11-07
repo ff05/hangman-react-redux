@@ -79,6 +79,10 @@ class Hangman extends PureComponent {
       this.props.addGuess(value)
   }
 
+  handleSubmit(event) {
+    event.preventDefault()
+  }
+
   showHangman(wrongs) {
     switch(wrongs) {
       case 1:
@@ -180,7 +184,7 @@ class Hangman extends PureComponent {
       <div className="hangman">
         {this.showHangman(guessCount)}
         {showGuess}
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <label>
             Enter letter:
             <input type="text" value="" onChange={this.onChange.bind(this)} />
