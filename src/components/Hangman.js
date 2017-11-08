@@ -26,13 +26,14 @@ class Hangman extends PureComponent {
       if (word.indexOf(guesses[i]) === -1)
       count += 1;
     }
-    this.isDead(count)
     this.showHangman(count)
-    return count
+    this.isDead(count)
 
+    return count
   }
 
   isDead(guessCount) {
+      console.log(guessCount, this.props.hangman.guessCount)
     if (guessCount == this.props.hangman.guessCount){
       alert("You lost")
       this.reset()

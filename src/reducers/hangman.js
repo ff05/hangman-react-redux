@@ -11,6 +11,7 @@ export default (currentState = hangman, { type, payload } = {}) => {
       }
     case CLEAR_GUESSES:
       return {
+        ...currentState,
         guesses: []
       }
 
