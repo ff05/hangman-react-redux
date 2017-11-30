@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
 import Hangman from './Hangman'
+import Word from './Word'
 import styles from './Game.css'
 
 class Game extends PureComponent {
@@ -27,7 +28,6 @@ class Game extends PureComponent {
       if (word.indexOf(guesses[i]) === -1)
       count += 1;
     }
-    this.showHangman(count)
     this.isDead(count)
 
     return count
@@ -90,7 +90,7 @@ class Game extends PureComponent {
     return (
       <div className="Hangman">
         <Hangman wrongs={guessCount}/>
-        {showGuess}
+        <Word word={this.word} guesses={guesses}/>
         <form onSubmit={this.handleSubmit}>
           <label>
             Enter letter:
