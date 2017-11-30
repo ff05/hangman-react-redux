@@ -67,10 +67,18 @@ class Game extends PureComponent {
       return guesses.includes(guess)
     })
     let game
-    count.length === this.word.length ?
+    if (count.length === this.word.length) {
       game = (
         <h1>You won!</h1>
-      ) :
+      )
+    } else if ( guessCount == this.props.hangman.guessCount ) {
+      game = (
+        <div>
+          <h1>You are Dead!</h1>
+          <button>Play Again></button>
+        </div>
+      )
+    } else {
       game = (
         <div>
           <Hangman wrongs={guessCount}/>
@@ -78,7 +86,8 @@ class Game extends PureComponent {
           <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
           <Guesses guesses={guesses}/>
         </div>
-      )
+    )}
+
     return (
       <div className="Hangman">
         { game }
