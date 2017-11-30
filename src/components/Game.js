@@ -6,7 +6,7 @@ import Guesses from './Guesses'
 import Hangman from './Hangman'
 import LetterInput from './LetterInput'
 import Word from './Word'
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from 'material-ui/RaisedButton'
 import styles from './Game.css'
 
 class Game extends PureComponent {
@@ -46,8 +46,8 @@ class Game extends PureComponent {
   }
 
   reset() {
-    this.generateWord()
     this.props.clearGuesses()
+    this.generateWord()
   }
 
   onChange(event) {
@@ -70,11 +70,18 @@ class Game extends PureComponent {
     let game
     if (count.length === this.word.length) {
       game = (
-        <h1>You won!</h1>
+        <div className="inner">
+          <h1>You won!</h1>
+          <RaisedButton
+          label="Play Again?"
+          style= {{textAlign: 'center'}}
+          onClick={this.reset.bind(this)}
+          />
+        </div>
       )
     } else if ( guessCount == this.props.hangman.guessCount ) {
       game = (
-        <div>
+        <div className="inner">
           <h1>You are Dead!</h1>
           <RaisedButton
           label="Play Again?"
@@ -84,7 +91,7 @@ class Game extends PureComponent {
       )
     } else {
       game = (
-        <div>
+        <div className="inner">
           <Hangman wrongs={guessCount}/>
           <Word word={this.word} guesses={guesses}/>
           <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
