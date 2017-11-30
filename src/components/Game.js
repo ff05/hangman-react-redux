@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
 import Hangman from './Hangman'
+import LetterInput from './LetterInput'
 import Word from './Word'
 import styles from './Game.css'
 
@@ -91,12 +92,7 @@ class Game extends PureComponent {
       <div className="Hangman">
         <Hangman wrongs={guessCount}/>
         <Word word={this.word} guesses={guesses}/>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Enter letter:
-            <input type="text" value="" onChange={this.onChange.bind(this)} />
-          </label>
-        </form>
+        <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
         {showGuesses}
       </div>
     )
