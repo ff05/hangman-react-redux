@@ -82,105 +82,13 @@ class Game extends PureComponent {
     event.preventDefault()
   }
 
-  showHangman(wrongs) {
-    switch(wrongs) {
-      case 1:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 2:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |           ||<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 3:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 4:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 5:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |           |<br />
-         |          /<br />
-    ___________
-        </pre>)
-      case 6:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |         | /\ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |           ||<br />
-         |          /  \<br />
-         ___________
-        </pre>)
-      default:
-      return (<pre>
-                ___________<br />
-               |  /        ||<br />
-               | / <br />
-               |/ <br />
-               |<br />
-               |<br />
-               |<br />
-               |<br />
-              ___________
-        </pre>)
-    }
-
-  }
-
   render() {
     const {guesses} = this.props.hangman
-
     const guessCount = this.wrongGuessCount(this.word, guesses)
     const showGuess = this.showGuess(this.word, guesses)
     const showGuesses = this.showGuesses(guesses)
     return (
-      <div className="hangman">
+      <div className="Hangman">
         <Hangman wrongs={guessCount}/>
         {showGuess}
         <form onSubmit={this.handleSubmit}>
