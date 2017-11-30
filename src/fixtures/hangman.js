@@ -1,4 +1,11 @@
 export default {
   guessCount : [6],
-  guesses : []
+  guesses : [],
+  words : [
+    "moustache",
+    "recipe",
+    "coffee",
+    "thingy",
+    "cors"
+  ]
 }

@@ -2,23 +2,22 @@ import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
+import Guesses from './Guesses'
 import Hangman from './Hangman'
+import LetterInput from './LetterInput'
+import Word from './Word'
+import RaisedButton from 'material-ui/RaisedButton'
 import styles from './Game.css'
 
 class Game extends PureComponent {
   constructor(props) {
     super(props)
+    this.generateWord()
+  }
 
-    this.words = [
-      "moustache",
-      "recipe",
-      "coffee",
-      "thingy",
-      "cors"
-    ]
-
-    this.word = this.words[Math.floor(Math.random()*this.words.length)]
-
+  generateWord() {
+    const { words } = this.props.hangman
+    this.word = words[Math.floor(Math.random()*words.length)]
   }
 
   wrongGuessCount(word, guesses) {
@@ -27,8 +26,6 @@ class Game extends PureComponent {
       if (word.indexOf(guesses[i]) === -1)
       count += 1;
     }
-    this.showHangman(count)
-    this.isDead(count)
 
     return count
   }
@@ -37,16 +34,6 @@ class Game extends PureComponent {
     if (guessCount == this.props.hangman.guessCount){
       this.reset()
     }
-  }
-
-  showGuess(word, guesses) {
-    var wordArr = word.split("");
-    var wordArr2 = wordArr.map(function(el) {
-      if (guesses.includes(el)) return el;
-      else return "_";
-    });
-    this.youWon(word, guesses)
-    return (<h2>{wordArr2.join(" ")}</h2>)
   }
 
   youWon(word, guesses) {
@@ -58,17 +45,9 @@ class Game extends PureComponent {
     }
   }
 
-  showGuesses(guesses) {
-    return (<p>Guessed sofar: {guesses.join(", ")}</p>)
-  }
-
   reset() {
-    this.generateWord()
     this.props.clearGuesses()
-  }
-
-  generateWord() {
-    this.word = this.words[Math.floor(Math.random()*this.words.length)]
+    this.generateWord()
   }
 
   onChange(event) {
@@ -82,116 +61,49 @@ class Game extends PureComponent {
     event.preventDefault()
   }
 
-  showHangman(wrongs) {
-    switch(wrongs) {
-      case 1:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 2:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |           ||<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 3:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 4:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |<br />
-         |<br />
-    ___________
-        </pre>)
-      case 5:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |           |<br />
-         |          /<br />
-    ___________
-        </pre>)
-      case 6:
-      return (<pre>
-          ___________<br />
-         |  /        ||<br />
-         | /        ----<br />
-         |/        | ++ |<br />
-         |         | /\ |<br />
-         |          ----<br />
-         |         \_||_/<br />
-         |           ||<br />
-         |          /  \<br />
-         ___________
-        </pre>)
-      default:
-      return (<pre>
-                ___________<br />
-               |  /        ||<br />
-               | / <br />
-               |/ <br />
-               |<br />
-               |<br />
-               |<br />
-               |<br />
-              ___________
-        </pre>)
-    }
-
-  }
-
   render() {
     const {guesses} = this.props.hangman
-
     const guessCount = this.wrongGuessCount(this.word, guesses)
-    const showGuess = this.showGuess(this.word, guesses)
-    const showGuesses = this.showGuesses(guesses)
+    let count = this.word.split("").filter(guess => {
+      return guesses.includes(guess)
+    })
+    let game
+    if (count.length === this.word.length) {
+      game = (
+        <div className="inner">
+          <h1>You won!</h1>
+          <RaisedButton
+          label="Play Again?"
+          style= {{textAlign: 'center'}}
+          onClick={this.reset.bind(this)}
+          />
+        </div>
+      )
+    } else if ( guessCount == this.props.hangman.guessCount ) {
+      game = (
+        <div className="inner">
+          <h1>You are Dead!</h1>
+          <RaisedButton
+          label="Play Again?"
+          onClick={this.reset.bind(this)}
+          />
+        </div>
+      )
+    } else {
+      game = (
+        <div className="inner">
+          <Hangman wrongs={guessCount}/>
+          <Word word={this.word} guesses={guesses}/>
+          <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
+          <Guesses guesses={guesses}/>
+        </div>
+      )
+    }
+
     return (
-      <div className="hangman">
-        <Hangman wrongs={guessCount}/>
-        {showGuess}
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Enter letter:
-            <input type="text" value="" onChange={this.onChange.bind(this)} />
-          </label>
-        </form>
-        {showGuesses}
-      </div>
-    )
+      <div className="Hangman">
+        { game }
+      </div>)
   }
 }
 
