@@ -25,7 +25,6 @@ class Game extends PureComponent {
       if (word.indexOf(guesses[i]) === -1)
       count += 1;
     }
-    this.isDead(count)
 
     return count
   }
@@ -64,14 +63,26 @@ class Game extends PureComponent {
   render() {
     const {guesses} = this.props.hangman
     const guessCount = this.wrongGuessCount(this.word, guesses)
+    let count = this.word.split("").filter(guess => {
+      return guesses.includes(guess)
+    })
+    let game
+    count.length === this.word.length ?
+      game = (
+        <h1>You won!</h1>
+      ) :
+      game = (
+        <div>
+          <Hangman wrongs={guessCount}/>
+          <Word word={this.word} guesses={guesses}/>
+          <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
+          <Guesses guesses={guesses}/>
+        </div>
+      )
     return (
       <div className="Hangman">
-        <Hangman wrongs={guessCount}/>
-        <Word word={this.word} guesses={guesses}/>
-        <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
-        <Guesses guesses={guesses}/>
-      </div>
-    )
+        { game }
+      </div>)
   }
 }
 
