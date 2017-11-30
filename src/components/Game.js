@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
+import Guesses from './Guesses'
 import Hangman from './Hangman'
 import LetterInput from './LetterInput'
 import Word from './Word'
@@ -59,10 +60,6 @@ class Game extends PureComponent {
     }
   }
 
-  showGuesses(guesses) {
-    return (<p>Guessed sofar: {guesses.join(", ")}</p>)
-  }
-
   reset() {
     this.generateWord()
     this.props.clearGuesses()
@@ -86,14 +83,12 @@ class Game extends PureComponent {
   render() {
     const {guesses} = this.props.hangman
     const guessCount = this.wrongGuessCount(this.word, guesses)
-    const showGuess = this.showGuess(this.word, guesses)
-    const showGuesses = this.showGuesses(guesses)
     return (
       <div className="Hangman">
         <Hangman wrongs={guessCount}/>
         <Word word={this.word} guesses={guesses}/>
         <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
-        {showGuesses}
+        <Guesses guesses={guesses}/>
       </div>
     )
   }
