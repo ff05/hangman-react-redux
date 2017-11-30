@@ -11,17 +11,12 @@ import styles from './Game.css'
 class Game extends PureComponent {
   constructor(props) {
     super(props)
+    this.generateWord()
+  }
 
-    this.words = [
-      "moustache",
-      "recipe",
-      "coffee",
-      "thingy",
-      "cors"
-    ]
-
-    this.word = this.words[Math.floor(Math.random()*this.words.length)]
-
+  generateWord() {
+    const { words } = this.props.hangman
+    this.word = words[Math.floor(Math.random()*words.length)]
   }
 
   wrongGuessCount(word, guesses) {
@@ -41,16 +36,6 @@ class Game extends PureComponent {
     }
   }
 
-  showGuess(word, guesses) {
-    var wordArr = word.split("");
-    var wordArr2 = wordArr.map(function(el) {
-      if (guesses.includes(el)) return el;
-      else return "_";
-    });
-    this.youWon(word, guesses)
-    return (<h2>{wordArr2.join(" ")}</h2>)
-  }
-
   youWon(word, guesses) {
     let count = word.split("").filter(guess => {
       return guesses.includes(guess)
@@ -63,10 +48,6 @@ class Game extends PureComponent {
   reset() {
     this.generateWord()
     this.props.clearGuesses()
-  }
-
-  generateWord() {
-    this.word = this.words[Math.floor(Math.random()*this.words.length)]
   }
 
   onChange(event) {
