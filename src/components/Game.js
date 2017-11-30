@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
-import css from './Hangman.css'
+import styles from './Game.css'
 
 class Hangman extends PureComponent {
   constructor(props) {
@@ -33,9 +33,7 @@ class Hangman extends PureComponent {
   }
 
   isDead(guessCount) {
-      console.log(guessCount, this.props.hangman.guessCount)
     if (guessCount == this.props.hangman.guessCount){
-      alert("You lost")
       this.reset()
     }
   }
@@ -55,7 +53,6 @@ class Hangman extends PureComponent {
       return guesses.includes(guess)
     })
     if (count.length === word.length){
-      alert("You won")
       this.reset()
     }
   }
