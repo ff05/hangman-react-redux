@@ -2,9 +2,10 @@ import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import addGuess from '../actions/guesses/add'
 import clearGuesses from '../actions/guesses/clear'
+import Hangman from './Hangman'
 import styles from './Game.css'
 
-class Hangman extends PureComponent {
+class Game extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -180,7 +181,7 @@ class Hangman extends PureComponent {
     const showGuesses = this.showGuesses(guesses)
     return (
       <div className="hangman">
-        {this.showHangman(guessCount)}
+        <Hangman wrongs={guessCount}/>
         {showGuess}
         <form onSubmit={this.handleSubmit}>
           <label>
@@ -197,4 +198,4 @@ class Hangman extends PureComponent {
 const mapStateToProps = ({ hangman }) => ({ hangman })
 const mapDispatchToProps = { addGuess, clearGuesses }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Hangman)
+export default connect(mapStateToProps, mapDispatchToProps)(Game)
