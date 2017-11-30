@@ -6,6 +6,7 @@ import Guesses from './Guesses'
 import Hangman from './Hangman'
 import LetterInput from './LetterInput'
 import Word from './Word'
+import RaisedButton from 'material-ui/RaisedButton';
 import styles from './Game.css'
 
 class Game extends PureComponent {
@@ -75,7 +76,10 @@ class Game extends PureComponent {
       game = (
         <div>
           <h1>You are Dead!</h1>
-          <button>Play Again></button>
+          <RaisedButton
+          label="Play Again?"
+          onClick={this.reset.bind(this)}
+          />
         </div>
       )
     } else {
@@ -86,7 +90,8 @@ class Game extends PureComponent {
           <LetterInput onSubmit={this.handleSubmit} onChange={this.onChange.bind(this)} />
           <Guesses guesses={guesses}/>
         </div>
-    )}
+      )
+    }
 
     return (
       <div className="Hangman">
